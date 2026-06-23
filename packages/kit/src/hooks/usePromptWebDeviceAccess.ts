@@ -4,7 +4,10 @@ import backgroundApiProxy from '@onekeyhq/kit/src/background/instance/background
 import platformEnv from '@onekeyhq/shared/src/platformEnv';
 import type { EHardwareVendor } from '@onekeyhq/shared/types/device';
 
-import { getWebUsbDeviceFilters } from './usePromptWebDeviceAccessUtils';
+import {
+  getWebUsbDeviceFilters,
+  isWebUsbNoDeviceSelectedError,
+} from './usePromptWebDeviceAccessUtils';
 
 export function usePromptWebDeviceAccess() {
   /**
@@ -17,10 +20,11 @@ export function usePromptWebDeviceAccess() {
         const device = await navigator.usb.requestDevice({
           filters: getWebUsbDeviceFilters(vendor),
         });
-        console.log('USB device permission granted:', device);
         return device;
       } catch (error) {
-        console.error('Failed to request USB device permission:', error);
+        if (!isWebUsbNoDeviceSelectedError(error)) {
+          console.error('Failed to request USB device permission:', error);
+        }
         throw error;
       }
     },
