@@ -8,6 +8,10 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const babelTools = require('../babelTools');
 
 const { ENABLE_ANALYZER, NODE_ENV } = require('./constant');
+const {
+  createLavaMoatWebpackPlugin,
+  createLavaMoatWebpackRules,
+} = require('./lavamoat');
 const analyzerConfig = require('./webpack.analyzer.config');
 const baseConfig = require('./webpack.base.config');
 const developmentConfig = require('./webpack.development.config');
@@ -34,6 +38,9 @@ module.exports = ({
           output: {
             crossOriginLoading: 'anonymous',
           },
+          module: {
+            rules: createLavaMoatWebpackRules(),
+          },
           plugins: [
             new SubresourceIntegrityPlugin(),
             new InjectManifest({
@@ -46,7 +53,11 @@ module.exports = ({
                 /index\.html$/,
               ],
             }),
-          ],
+            createLavaMoatWebpackPlugin({
+              basePath,
+              target: 'web',
+            }),
+          ].filter(Boolean),
         },
       );
     case 'development':

@@ -9,15 +9,23 @@
     "clean": "yarn clean:build",
     "clean:build": "rimraf ./web-build && rimraf .tamagui && rimraf ./node_modules/.cache",
     "build": "yarn clean && cross-env NODE_ENV=production webpack build && cp ./web-build/index.html ./web-build/404.html && bash ./postbuild.sh",
-    "build:rspack": "yarn clean && cross-env NODE_ENV=production rspack build && cp ./web-build/index.html ./web-build/404.html && bash ./postbuild.sh"
+    "build:lavamoat": "yarn clean && cross-env NODE_ENV=production ONEKEY_LAVAMOAT=1 NODE_OPTIONS=--max-old-space-size=10240 webpack build && cp ./web-build/index.html ./web-build/404.html && bash ./postbuild.sh",
+    "build:rspack": "yarn clean && cross-env NODE_ENV=production rspack build && cp ./web-build/index.html ./web-build/404.html && bash ./postbuild.sh",
+    "lavamoat:policy": "cross-env NODE_ENV=production ONEKEY_LAVAMOAT=1 ONEKEY_LAVAMOAT_GENERATE_POLICY=1 NODE_OPTIONS=--max-old-space-size=10240 webpack build"
   },
   "dependencies": {
     "@onekeyhq/components": "*",
+    "@onekeyhq/core": "*",
     "@onekeyhq/kit": "*",
+    "@onekeyhq/kit-bg": "*",
+    "@onekeyhq/qr-wallet-sdk": "*",
     "@onekeyhq/shared": "*"
   },
   "devDependencies": {
-    "rimraf": "3.0.2"
+    "cross-env": "7.0.3",
+    "rimraf": "3.0.2",
+    "webpack": "5.90.3",
+    "webpack-cli": "5.1.4"
   },
   "private": true
 }
